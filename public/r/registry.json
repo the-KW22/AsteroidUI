@@ -1,0 +1,191 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "asteroidui",
+  "homepage": "http://localhost:3000",
+  "items": [
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "An action button with optional interaction feedback and application-controlled loading.",
+      "dependencies": ["@base-ui/react@1.9.0", "class-variance-authority@0.7.1"],
+      "registryDependencies": [
+        "http://localhost:3000/r/spinner.json",
+        "http://localhost:3000/r/utils.json",
+        "http://localhost:3000/r/library-styles.json"
+      ],
+      "files": [
+        { "path": "src/components/ui/button.tsx", "type": "registry:ui", "target": "@ui/button.tsx" }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "A native text field with shared styling and native form semantics.",
+      "registryDependencies": [
+        "http://localhost:3000/r/utils.json",
+        "http://localhost:3000/r/library-styles.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/input.tsx",
+          "type": "registry:ui",
+          "target": "@ui/input.tsx"
+        }
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "A multiline native text field with vertical resizing.",
+      "registryDependencies": [
+        "http://localhost:3000/r/utils.json",
+        "http://localhost:3000/r/library-styles.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/textarea.tsx",
+          "type": "registry:ui",
+          "target": "@ui/textarea.tsx"
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "A native label associating visible text with a form control.",
+      "registryDependencies": [
+        "http://localhost:3000/r/utils.json",
+        "http://localhost:3000/r/library-styles.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/label.tsx",
+          "type": "registry:ui",
+          "target": "@ui/label.tsx"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "A labeled choice supporting checked and indeterminate states.",
+      "dependencies": [
+        "@base-ui/react@1.9.0",
+        "lucide-react@1.56.0"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/utils.json",
+        "http://localhost:3000/r/library-styles.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/checkbox.tsx"
+        }
+      ]
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "title": "Radio group",
+      "description": "A keyboard-accessible group for choosing one value.",
+      "dependencies": [
+        "@base-ui/react@1.9.0",
+        "lucide-react@1.56.0"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/utils.json",
+        "http://localhost:3000/r/library-styles.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/radio-group.tsx",
+          "type": "registry:ui",
+          "target": "@ui/radio-group.tsx"
+        }
+      ]
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "A keyboard-accessible dropdown for choosing a predefined value.",
+      "dependencies": [
+        "@base-ui/react@1.9.0",
+        "lucide-react@1.56.0"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/utils.json",
+        "http://localhost:3000/r/library-styles.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/select.tsx",
+          "type": "registry:ui",
+          "target": "@ui/select.tsx"
+        }
+      ]
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "description": "A keyboard-accessible control for a binary setting.",
+      "dependencies": [
+        "@base-ui/react@1.9.0"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/utils.json",
+        "http://localhost:3000/r/library-styles.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/switch.tsx",
+          "type": "registry:ui",
+          "target": "@ui/switch.tsx"
+        }
+      ]
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "title": "Spinner",
+      "description": "A reusable loading ring with standalone status and decorative modes.",
+      "dependencies": ["lucide-react@1.56.0"],
+      "registryDependencies": [
+        "http://localhost:3000/r/utils.json",
+        "http://localhost:3000/r/library-styles.json"
+      ],
+      "files": [
+        { "path": "src/components/ui/spinner.tsx", "type": "registry:ui", "target": "@ui/spinner.tsx" }
+      ]
+    },
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "title": "Class name utilities",
+      "description": "The class name merging helper used by library components.",
+      "dependencies": ["clsx@2.1.1", "tailwind-merge@3.7.0"],
+      "files": [
+        { "path": "src/lib/utils.ts", "type": "registry:lib", "target": "@lib/utils.ts" },
+        { "path": "THIRD_PARTY_NOTICES.md", "type": "registry:file", "target": "@ui/THIRD_PARTY_NOTICES.md" },
+        { "path": "LICENSE", "type": "registry:file", "target": "@ui/LICENSE" }
+      ]
+    },
+    {
+      "name": "library-styles",
+      "type": "registry:file",
+      "title": "Library styles",
+      "description": "Shared color, font, radius, and component interaction styles. Import this file once from the consumer's global stylesheet.",
+      "files": [
+        { "path": "src/styles/library.css", "type": "registry:file", "target": "@ui/library.css" }
+      ]
+    }
+  ]
+}

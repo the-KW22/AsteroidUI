@@ -1,0 +1,220 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #171717;
+  --card: #ffffff;
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  --primary: #171717;
+  --primary-foreground: #fafafa;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #171717;
+  --muted: #f5f5f5;
+  --muted-foreground: #525252;
+  --accent: #f5f5f5;
+  --accent-foreground: #171717;
+  --destructive: #b91c1c;
+  --destructive-foreground: #ffffff;
+  --border: #737373;
+  --input: #737373;
+  --ring: #525252;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --radius: 0.625rem;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #171717;
+  --foreground: #fafafa;
+  --card: #262626;
+  --card-foreground: #fafafa;
+  --popover: #262626;
+  --popover-foreground: #fafafa;
+  --primary: #fafafa;
+  --primary-foreground: #171717;
+  --secondary: #404040;
+  --secondary-foreground: #fafafa;
+  --muted: #262626;
+  --muted-foreground: #a3a3a3;
+  --accent: #404040;
+  --accent-foreground: #fafafa;
+  --destructive: #f87171;
+  --destructive-foreground: #171717;
+  --border: #737373;
+  --input: #737373;
+  --ring: #d4d4d4;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+}
+
+.cl-button {
+  position: relative;
+  max-width: 100%;
+  isolation: isolate;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  transition: transform 100ms ease, filter 110ms ease, box-shadow 110ms ease, background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.cl-button[data-animation="press"]:active:not([data-disabled]):not([data-loading]) {
+  transform: scale(0.98);
+}
+
+@media (hover: hover) {
+  .cl-button[data-animation="lift"]:hover:not([data-disabled]):not([data-loading]) {
+    transform: translateY(-1px);
+  }
+
+  .cl-button[data-animation="highlight"]:hover:not([data-disabled]):not([data-loading]) {
+    box-shadow: inset 0 0 0 100vmax color-mix(in srgb, currentColor 12%, transparent);
+  }
+
+  .cl-button[data-animation="inset"]:hover:not([data-disabled]):not([data-loading]) {
+    box-shadow: inset 0 1px 3px color-mix(in srgb, currentColor 30%, transparent);
+  }
+}
+
+.cl-button[data-animation="lift"]:focus-visible:not([data-disabled]):not([data-loading]) {
+  transform: translateY(-1px);
+}
+
+.cl-button[data-animation="highlight"]:is(:focus-visible, :active):not([data-disabled]):not([data-loading]) {
+  box-shadow: inset 0 0 0 100vmax color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.cl-button[data-animation="inset"]:is(:focus-visible, :active):not([data-disabled]):not([data-loading]) {
+  box-shadow: inset 0 1px 3px color-mix(in srgb, currentColor 30%, transparent);
+}
+
+.cl-button__content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.cl-button__idle,
+.cl-button__pending {
+  grid-area: 1 / 1;
+}
+
+.cl-button__idle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cl-button__pending {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.cl-button[data-loading] .cl-button__idle {
+  visibility: hidden;
+}
+
+.cl-button[data-loading] .cl-button__pending {
+  display: inline-flex;
+}
+
+.cl-button__ripple {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.cl-button__ripple::after {
+  position: absolute;
+  top: var(--ripple-y);
+  left: var(--ripple-x);
+  width: 0.5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: currentColor;
+  content: "";
+  opacity: 0.2;
+  transform: translate(-50%, -50%);
+  animation: cl-ripple 200ms ease-out forwards;
+}
+
+@keyframes cl-ripple {
+  to {
+    width: max(150%, 8rem);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cl-button {
+    transition: none;
+  }
+
+  .cl-button[data-animation="press"]:active:not([data-disabled]):not([data-loading]),
+  .cl-button[data-animation="lift"]:focus-visible:not([data-disabled]):not([data-loading]) {
+    transform: none;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 35%, transparent);
+  }
+
+  .cl-button[data-animation="highlight"]:is(:focus-visible, :active):not([data-disabled]):not([data-loading]) {
+    box-shadow: inset 0 0 0 100vmax color-mix(in srgb, currentColor 12%, transparent);
+  }
+
+  .cl-button[data-animation="inset"]:is(:focus-visible, :active):not([data-disabled]):not([data-loading]) {
+    box-shadow: inset 0 1px 3px color-mix(in srgb, currentColor 30%, transparent);
+  }
+
+  .cl-button[data-animation="ripple"]:is(:focus-visible, :active):not([data-disabled]):not([data-loading]) {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 35%, transparent);
+  }
+
+  .cl-button__ripple {
+    visibility: hidden;
+  }
+
+  .cl-button__ripple::after {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (hover: hover) {
+  .cl-button[data-animation="lift"]:hover:not([data-disabled]):not([data-loading]) {
+    transform: none;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 35%, transparent);
+  }
+}

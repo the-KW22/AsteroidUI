@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "radio-group",
+  "title": "Radio group",
+  "description": "A keyboard-accessible group for choosing one value.",
+  "dependencies": [
+    "@base-ui/react@1.9.0",
+    "lucide-react@1.56.0"
+  ],
+  "registryDependencies": [
+    "http://localhost:3000/r/utils.json",
+    "http://localhost:3000/r/library-styles.json"
+  ],
+  "files": [
+    {
+      "path": "src/components/ui/radio-group.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Radio as BaseRadio } from \"@base-ui/react/radio\";\nimport { RadioGroup as BaseRadioGroup } from \"@base-ui/react/radio-group\";\nimport { Check } from \"lucide-react\";\nimport { cn } from \"@/lib/utils\";\n\ntype RadioGroupProps = React.ComponentProps<typeof BaseRadioGroup>;\ntype RadioGroupItemProps = React.ComponentProps<typeof BaseRadio.Root>;\n\nfunction RadioGroup({ className, ...props }: RadioGroupProps) {\n  return (\n    <BaseRadioGroup\n      {...props}\n      className={(state) => cn(\"grid gap-2\", typeof className === \"function\" ? className(state) : className)}\n    />\n  );\n}\n\nconst RadioGroupItem = React.forwardRef<HTMLElement, RadioGroupItemProps>(\n  ({ className, ...props }, ref) => (\n    <BaseRadio.Root\n      {...props}\n      ref={ref}\n      className={(state) =>\n        cn(\n          \"inline-flex size-4 shrink-0 items-center justify-center rounded-full border border-input bg-background text-primary outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring data-[checked]:border-primary data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 aria-invalid:border-destructive aria-invalid:outline-destructive\",\n          typeof className === \"function\" ? className(state) : className,\n        )\n      }\n    >\n      <BaseRadio.Indicator className=\"flex items-center justify-center\">\n        <Check className=\"size-2.5\" aria-hidden=\"true\" />\n      </BaseRadio.Indicator>\n    </BaseRadio.Root>\n  ),\n);\nRadioGroupItem.displayName = \"RadioGroupItem\";\n\nexport { RadioGroup, RadioGroupItem };\n",
+      "type": "registry:ui",
+      "target": "@ui/radio-group.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}

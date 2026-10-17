@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "checkbox",
+  "title": "Checkbox",
+  "description": "A labeled choice supporting checked and indeterminate states.",
+  "dependencies": [
+    "@base-ui/react@1.9.0",
+    "lucide-react@1.56.0"
+  ],
+  "registryDependencies": [
+    "http://localhost:3000/r/utils.json",
+    "http://localhost:3000/r/library-styles.json"
+  ],
+  "files": [
+    {
+      "path": "src/components/ui/checkbox.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Checkbox as BaseCheckbox } from \"@base-ui/react/checkbox\";\nimport { Check, Minus } from \"lucide-react\";\nimport { cn } from \"@/lib/utils\";\n\ntype CheckboxProps = React.ComponentProps<typeof BaseCheckbox.Root>;\n\nconst Checkbox = React.forwardRef<HTMLElement, CheckboxProps>(\n  ({ className, ...props }, ref) => (\n    <BaseCheckbox.Root\n      {...props}\n      ref={ref}\n      className={(state) =>\n        cn(\n          \"group inline-flex size-4 shrink-0 items-center justify-center rounded-sm border border-input bg-background text-primary-foreground outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring data-[checked]:border-primary data-[checked]:bg-primary data-[indeterminate]:border-primary data-[indeterminate]:bg-primary data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 aria-invalid:border-destructive aria-invalid:outline-destructive\",\n          typeof className === \"function\" ? className(state) : className,\n        )\n      }\n    >\n      <BaseCheckbox.Indicator className=\"flex items-center justify-center\">\n        <Check className=\"size-3.5 group-data-[indeterminate]:hidden\" aria-hidden=\"true\" />\n        <Minus className=\"hidden size-3.5 group-data-[indeterminate]:block\" aria-hidden=\"true\" />\n      </BaseCheckbox.Indicator>\n    </BaseCheckbox.Root>\n  ),\n);\nCheckbox.displayName = \"Checkbox\";\n\nexport { Checkbox };\n",
+      "type": "registry:ui",
+      "target": "@ui/checkbox.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}
