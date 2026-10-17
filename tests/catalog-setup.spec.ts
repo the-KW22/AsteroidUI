@@ -2,6 +2,19 @@ import { expect, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { installCommand, isLocalRegistry, isLoopbackOrigin, registryOrigin } from "../src/catalog/registry-address";
 
+test("registry items are served under the full registry path", async ({ request }) => {
+  const response = await request.get("/registry/registry.json");
+  expect(response.ok()).toBe(true);
+  const catalog = await response.json();
+  expect(catalog.items).toHaveLength(11);
+  for (const item of catalog.items) {
+    const payload = await request.get(`/registry/${item.name}.json`);
+    expect(payload.ok()).toBe(true);
+    expect((await payload.json()).name).toBe(item.name);
+  }
+  expect((await request.get("/r/button.json")).status()).toBe(404);
+});
+
 test("configured loopback origins keep the local registry instructions", () => {
   for (const origin of ["http://localhost:3000", "http://127.0.0.2:3000", "http://preview.localhost:3000", "http://[::1]:3000"]) {
     expect(isLoopbackOrigin(origin)).toBe(true);
@@ -18,7 +31,7 @@ test("AsteroidUI links its selected source and actual distributed MIT license", 
   const license = await readFile("LICENSE", "utf8");
   expect((await page.locator("pre").textContent())?.replace(/\r\n/g, "\n")).toBe(license.replace(/\r\n/g, "\n"));
   await expect(page.locator("pre")).toContainText("Copyright (c) 2026 Leow Kai Wen");
-  const response = await request.get("/r/utils.json");
+  const response = await request.get("/registry/utils.json");
   expect(response.ok()).toBe(true);
   const item = await response.json();
   expect(item.files.find((file: { path: string }) => file.path === "LICENSE").content.replace(/\r\n/g, "\n")).toBe(license.replace(/\r\n/g, "\n"));

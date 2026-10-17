@@ -4,8 +4,8 @@
   "title": "Label",
   "description": "A native label associating visible text with a form control.",
   "registryDependencies": [
-    "http://localhost:3000/r/utils.json",
-    "http://localhost:3000/r/library-styles.json"
+    "http://localhost:3000/registry/utils.json",
+    "http://localhost:3000/registry/library-styles.json"
   ],
   "files": [
     {

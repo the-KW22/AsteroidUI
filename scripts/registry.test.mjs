@@ -31,8 +31,8 @@ test("environment origin resolves local defaults and requires public Vercel prod
   assert.throws(() => resolveRegistryOrigin("http://localhost:3000", { REGISTRY_ORIGIN: "http://localhost:3000", VERCEL_ENV: "production" }), /public HTTPS origin/)
 })
 
-test("environment origin builds matching payloads without changing maintained metadata", () => {
-  const { root, output, registry } = fixture()
+test("environment origin builds /registry payloads without changing maintained metadata", () => {
+  const { root, registry } = fixture()
   registry.items[0].registryDependencies.push("https://ui.shadcn.com/r/accordion.json")
   writeFileSync(path.join(root, "registry.json"), JSON.stringify(registry))
   const original = readFileSync(path.join(root, "registry.json"))
@@ -40,10 +40,10 @@ test("environment origin builds matching payloads without changing maintained me
   process.env.REGISTRY_ORIGIN = "https://asteroidui.example.test/"
   try {
     buildRegistry(root)
-    const catalog = JSON.parse(readFileSync(path.join(output, "registry.json"), "utf8"))
-    const button = JSON.parse(readFileSync(path.join(output, "button.json"), "utf8"))
+    const catalog = JSON.parse(readFileSync(path.join(root, "public", "registry", "registry.json"), "utf8"))
+    const button = JSON.parse(readFileSync(path.join(root, "public", "registry", "button.json"), "utf8"))
     assert.equal(catalog.homepage, "https://asteroidui.example.test")
-    assert.ok(button.registryDependencies.includes("https://asteroidui.example.test/r/spinner.json"))
+    assert.ok(button.registryDependencies.includes("https://asteroidui.example.test/registry/spinner.json"))
     assert.ok(button.registryDependencies.includes("https://ui.shadcn.com/r/accordion.json"))
     assert.deepEqual(readFileSync(path.join(root, "registry.json")), original)
     assert.doesNotThrow(() => validateRegistry(root))
@@ -85,7 +85,7 @@ function fixture() {
       cpSync(source, destination, { recursive: true })
     }
   }
-  const output = path.join(root, "public", "r")
+  const output = path.join(root, "public", "registry")
   execFileSync(process.execPath, [
     path.join(projectRoot, "node_modules", "shadcn", "dist", "index.js"),
     "build", "registry.json", "--output", output, "--cwd", root,
@@ -109,7 +109,7 @@ test("configures the registry origin and moves only same-origin dependencies", (
     configureRegistry("https://asteroid.example", root)
     const configured = JSON.parse(readFileSync(path.join(root, "registry.json"), "utf8"))
     assert.equal(configured.homepage, "https://asteroid.example")
-    assert.ok(configured.items[0].registryDependencies.includes("https://asteroid.example/r/spinner.json"))
+    assert.ok(configured.items[0].registryDependencies.includes("https://asteroid.example/registry/spinner.json"))
     assert.ok(configured.items[0].registryDependencies.includes("https://ui.shadcn.com/r/accordion.json"))
     assert.ok(configured.items.every((item) => (item.registryDependencies ?? []).every((dependency) =>
       !dependency.startsWith("http://localhost:3000/"),
@@ -147,7 +147,7 @@ test("production registry builds reject loopback origins before changing output"
       cpSync(source, destination, { recursive: true })
     }
   }
-  const output = path.join(root, "public", "r")
+  const output = path.join(root, "public", "registry")
   mkdirSync(output, { recursive: true })
   writeFileSync(path.join(output, "keep.json"), "unchanged")
   const previous = process.env.VERCEL_ENV
@@ -200,7 +200,7 @@ test("rejects registry items whose maintained source file is missing", () => {
 
 test("rejects local registry dependencies that do not resolve to declared items", () => {
   const { root, registry } = fixture()
-  registry.items[0].registryDependencies.push("http://localhost:3000/r/not-declared.json")
+  registry.items[0].registryDependencies.push("http://localhost:3000/registry/not-declared.json")
   writeFileSync(path.join(root, "registry.json"), JSON.stringify(registry))
   try {
     assert.throws(() => validateRegistry(root), /unresolved.*not-declared/i)
@@ -228,7 +228,7 @@ test("validates owned dependency URLs against registry homepage origin", () => {
 
 test("rejects malformed owned dependency URLs", () => {
   const { root, registry } = fixture()
-  registry.items[0].registryDependencies[0] = "http://localhost:3000/r/spinner"
+  registry.items[0].registryDependencies[0] = "http://localhost:3000/registry/spinner"
   writeFileSync(path.join(root, "registry.json"), JSON.stringify(registry))
   try {
     assert.throws(() => validateRegistry(root), /malformed.*local registry dependency/i)
@@ -240,7 +240,7 @@ test("rejects malformed owned dependency URLs", () => {
 test("rejects an unresolved dependency at a non-local owned origin", () => {
   const { root, output, registry } = fixture()
   registry.homepage = "https://components.example.test"
-  registry.items[0].registryDependencies[0] = "https://components.example.test/r/not-declared.json"
+  registry.items[0].registryDependencies[0] = "https://components.example.test/registry/not-declared.json"
   writeFileSync(path.join(root, "registry.json"), JSON.stringify(registry))
   rebuild(root, output)
   try {
@@ -292,11 +292,11 @@ test("accepts fresh official CLI output and the required dependency edges", () =
     assert.doesNotThrow(() => validateRegistry(root))
     const items = Object.fromEntries(registry.items.map((item) => [item.name, item]))
     assert.deepEqual(items.spinner.registryDependencies, [
-      "http://localhost:3000/r/utils.json",
-      "http://localhost:3000/r/library-styles.json",
+      "http://localhost:3000/registry/utils.json",
+      "http://localhost:3000/registry/library-styles.json",
     ])
-    assert.ok(items.button.registryDependencies.includes("http://localhost:3000/r/spinner.json"))
-    assert.ok(existsSync(path.join(root, "public", "r", "registry.json")))
+    assert.ok(items.button.registryDependencies.includes("http://localhost:3000/registry/spinner.json"))
+    assert.ok(existsSync(path.join(root, "public", "registry", "registry.json")))
   } finally {
     rmSync(root, { recursive: true, force: true })
   }

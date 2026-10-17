@@ -80,13 +80,13 @@ function validateMetadata(root, registry) {
       try {
         address = new URL(dependency)
       } catch {
-        if (dependency.startsWith(`${homepage.origin}/r/`)) {
+        if (dependency.startsWith(`${homepage.origin}/registry/`)) {
           throw new Error(`Item "${item.name}" has a malformed local registry dependency "${dependency}".`)
         }
         continue
       }
       if (address.origin !== homepage.origin) continue
-      const match = address.pathname.match(/^\/r\/([a-z0-9-]+)\.json$/)
+      const match = address.pathname.match(/^\/registry\/([a-z0-9-]+)\.json$/)
       if (!match || address.search || address.hash) {
         throw new Error(`Item "${item.name}" has a malformed local registry dependency "${dependency}".`)
       }
@@ -136,9 +136,9 @@ export function validateRegistry(root = projectRoot) {
 
   const tempRoot = mkdtempSync(path.join(os.tmpdir(), "registry-validation-"))
   try {
-    const freshOutput = path.join(tempRoot, "r")
+    const freshOutput = path.join(tempRoot, "registry")
     cliBuild(root, freshOutput, registry)
-    compareJsonDirectories(freshOutput, path.join(root, "public", "r"))
+    compareJsonDirectories(freshOutput, path.join(root, "public", "registry"))
   } finally {
     rmSync(tempRoot, { recursive: true, force: true })
   }
@@ -151,7 +151,7 @@ export function buildRegistry(root = projectRoot) {
   schemaError(registrySchema, registry, metadataPath)
   setRegistryOrigin(registry, resolveRegistryOrigin(registry.homepage))
   validateMetadata(root, registry)
-  const output = path.join(root, "public", "r")
+  const output = path.join(root, "public", "registry")
   mkdirSync(output, { recursive: true })
   cliBuild(root, output, registry)
 }

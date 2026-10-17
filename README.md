@@ -28,10 +28,10 @@ Open `/components` to browse all nine components and their preview, examples, co
 Prepare a React/TypeScript application using the Next.js or Vite Getting Started guide, then keep this catalog running while installing:
 
 ```sh
-npx shadcn@4.21.4 add http://localhost:3000/r/button.json
+npx shadcn@4.21.4 add http://localhost:3000/registry/button.json
 ```
 
-The registry installs maintained component source, dependencies, shared styles and third-party notices. Import the installed `library.css` after Tailwind in the consuming application's global stylesheet. The consuming application owns appearance and custom-font loading. All nine selected basics have individual `/r/<slug>.json` items; `utils` and `library-styles` are shared installation dependencies.
+The registry installs maintained component source, dependencies, shared styles and third-party notices. Import the installed `library.css` after Tailwind in the consuming application's global stylesheet. The consuming application owns appearance and custom-font loading. All nine selected basics have individual `/registry/<slug>.json` items; `utils` and `library-styles` are shared installation dependencies.
 
 Source repository: [the-KW22/AsteroidUI](https://github.com/the-KW22/AsteroidUI). AsteroidUI uses the [MIT license](LICENSE), copyright 2026 Leow Kai Wen, with retained [third-party notices](THIRD_PARTY_NOTICES.md). Each component installation includes both license files through its shared dependency graph.
 
@@ -39,6 +39,6 @@ Source repository: [the-KW22/AsteroidUI](https://github.com/the-KW22/AsteroidUI)
 
 Vercel is the selected host. Set `REGISTRY_ORIGIN` to your actual public HTTPS origin in the Vercel project's Production environment settings, then deploy/redeploy. A Vercel production build rejects a missing or local origin. No `NEXT_PUBLIC_` prefix is needed: catalog commands are rendered on the server.
 
-The registry scripts use Next.js's environment loader, including `.env.local`, while values supplied by Vercel take precedence. The build generates `/r/` homepage/dependency URLs and catalog commands from the same resolved origin without rewriting maintained `registry.json`. You do not need to run `registry:configure` or commit a domain into source metadata.
+The registry scripts use Next.js's environment loader, including `.env.local`, while values supplied by Vercel take precedence. The build generates `/registry/` homepage/dependency URLs and catalog commands from the same resolved origin without rewriting maintained `registry.json`. You do not need to run `registry:configure` or commit a domain into source metadata.
 
 In Vercel, use the repository root, Next.js framework preset, Node.js 24.x, install command `npm ci`, and build command `npm run build`. Keep the standard Next.js output settings. Public deployment and hosted installation checks remain pending.

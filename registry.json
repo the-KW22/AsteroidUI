@@ -10,9 +10,9 @@
       "description": "An action button with optional interaction feedback and application-controlled loading.",
       "dependencies": ["@base-ui/react@1.9.0", "class-variance-authority@0.7.1"],
       "registryDependencies": [
-        "http://localhost:3000/r/spinner.json",
-        "http://localhost:3000/r/utils.json",
-        "http://localhost:3000/r/library-styles.json"
+        "http://localhost:3000/registry/spinner.json",
+        "http://localhost:3000/registry/utils.json",
+        "http://localhost:3000/registry/library-styles.json"
       ],
       "files": [
         { "path": "src/components/ui/button.tsx", "type": "registry:ui", "target": "@ui/button.tsx" }
@@ -24,8 +24,8 @@
       "title": "Input",
       "description": "A native text field with shared styling and native form semantics.",
       "registryDependencies": [
-        "http://localhost:3000/r/utils.json",
-        "http://localhost:3000/r/library-styles.json"
+        "http://localhost:3000/registry/utils.json",
+        "http://localhost:3000/registry/library-styles.json"
       ],
       "files": [
         {
@@ -41,8 +41,8 @@
       "title": "Textarea",
       "description": "A multiline native text field with vertical resizing.",
       "registryDependencies": [
-        "http://localhost:3000/r/utils.json",
-        "http://localhost:3000/r/library-styles.json"
+        "http://localhost:3000/registry/utils.json",
+        "http://localhost:3000/registry/library-styles.json"
       ],
       "files": [
         {
@@ -58,8 +58,8 @@
       "title": "Label",
       "description": "A native label associating visible text with a form control.",
       "registryDependencies": [
-        "http://localhost:3000/r/utils.json",
-        "http://localhost:3000/r/library-styles.json"
+        "http://localhost:3000/registry/utils.json",
+        "http://localhost:3000/registry/library-styles.json"
       ],
       "files": [
         {
@@ -79,8 +79,8 @@
         "lucide-react@1.56.0"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/utils.json",
-        "http://localhost:3000/r/library-styles.json"
+        "http://localhost:3000/registry/utils.json",
+        "http://localhost:3000/registry/library-styles.json"
       ],
       "files": [
         {
@@ -100,8 +100,8 @@
         "lucide-react@1.56.0"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/utils.json",
-        "http://localhost:3000/r/library-styles.json"
+        "http://localhost:3000/registry/utils.json",
+        "http://localhost:3000/registry/library-styles.json"
       ],
       "files": [
         {
@@ -121,8 +121,8 @@
         "lucide-react@1.56.0"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/utils.json",
-        "http://localhost:3000/r/library-styles.json"
+        "http://localhost:3000/registry/utils.json",
+        "http://localhost:3000/registry/library-styles.json"
       ],
       "files": [
         {
@@ -141,8 +141,8 @@
         "@base-ui/react@1.9.0"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/utils.json",
-        "http://localhost:3000/r/library-styles.json"
+        "http://localhost:3000/registry/utils.json",
+        "http://localhost:3000/registry/library-styles.json"
       ],
       "files": [
         {
@@ -159,8 +159,8 @@
       "description": "A reusable loading ring with standalone status and decorative modes.",
       "dependencies": ["lucide-react@1.56.0"],
       "registryDependencies": [
-        "http://localhost:3000/r/utils.json",
-        "http://localhost:3000/r/library-styles.json"
+        "http://localhost:3000/registry/utils.json",
+        "http://localhost:3000/registry/library-styles.json"
       ],
       "files": [
         { "path": "src/components/ui/spinner.tsx", "type": "registry:ui", "target": "@ui/spinner.tsx" }

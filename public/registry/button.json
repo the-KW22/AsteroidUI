@@ -8,9 +8,9 @@
     "class-variance-authority@0.7.1"
   ],
   "registryDependencies": [
-    "http://localhost:3000/r/spinner.json",
-    "http://localhost:3000/r/utils.json",
-    "http://localhost:3000/r/library-styles.json"
+    "http://localhost:3000/registry/spinner.json",
+    "http://localhost:3000/registry/utils.json",
+    "http://localhost:3000/registry/library-styles.json"
   ],
   "files": [
     {

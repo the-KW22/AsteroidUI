@@ -84,11 +84,11 @@ test("switch usage is client-ready and companion components are installable", as
 
   await page.goto("/components/input");
   await expect(page.getByRole("heading", { name: "Usage companions" })).toBeVisible();
-  await expect(page.getByLabel("Install Label", { exact: true })).toContainText("/r/label.json");
+  await expect(page.getByLabel("Install Label", { exact: true })).toContainText("/registry/label.json");
   await expect(page.getByRole("link", { name: "Label", exact: true }).first()).toHaveAttribute("href", "/components/label");
 
   await page.goto("/components/label");
-  await expect(page.getByLabel("Install Input", { exact: true })).toContainText("/r/input.json");
+  await expect(page.getByLabel("Install Input", { exact: true })).toContainText("/registry/input.json");
 });
 
 test("detail pages retain the preview and avoid page-level overflow on mobile", async ({ page }) => {

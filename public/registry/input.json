@@ -4,8 +4,8 @@
   "title": "Input",
   "description": "A native text field with shared styling and native form semantics.",
   "registryDependencies": [
-    "http://localhost:3000/r/utils.json",
-    "http://localhost:3000/r/library-styles.json"
+    "http://localhost:3000/registry/utils.json",
+    "http://localhost:3000/registry/library-styles.json"
   ],
   "files": [
     {
