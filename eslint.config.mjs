@@ -8,6 +8,9 @@ export default defineConfig([
   globalIgnores([
     ".next/**",
     ".npm-cache/**",
+    ".playwright-browsers/**",
+    ".taste-skill/**",
+    "docs/design/p7/s1/identity/*.cjs",
     "out/**",
     "build/**",
     "dist/**",

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { ThemeProvider } from "@/components/catalog/theme-provider";
+import { ThemeProvider } from "@/site/shell/theme-provider";
+import { SiteHeader } from "@/site/shell/site-header";
+import { SmoothScroll } from "@/site/shell/smooth-scroll";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,7 +15,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider><SmoothScroll /><SiteHeader /><div id="main-content" tabIndex={-1} className="focus:outline-none">{children}</div></ThemeProvider>
       </body>
     </html>
   );

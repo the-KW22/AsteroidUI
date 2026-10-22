@@ -19,22 +19,28 @@ export const SelectLabel = React.forwardRef<
 ));
 SelectLabel.displayName = "SelectLabel";
 
-export const SelectTrigger = React.forwardRef<
-  HTMLButtonElement,
-  React.ComponentProps<typeof BaseSelect.Trigger>
->(({ className, children, ...props }, ref) => (
-  <BaseSelect.Trigger
-    ref={ref}
-    className={(state) => cn(
-      "flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-background px-3 font-sans text-sm text-foreground shadow-sm outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:focus-visible:outline-destructive",
-      typeof className === "function" ? className(state) : className,
-    )}
-    {...props}
-  >
-    {children}
-    <ChevronDown aria-hidden="true" className="size-4 shrink-0 opacity-50" />
-  </BaseSelect.Trigger>
-));
+type SelectTriggerProps = Omit<React.ComponentProps<typeof BaseSelect.Trigger>, "variant"> & {
+  variant?: "outline" | "filled";
+  density?: "compact" | "default" | "comfortable";
+};
+
+export const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
+  ({ className, children, variant = "outline", density = "default", ...props }, ref) => (
+    <BaseSelect.Trigger
+      ref={ref}
+      className={(state) => cn(
+        "flex w-full items-center justify-between gap-2 rounded-md border font-sans text-sm text-foreground shadow-sm outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:focus-visible:outline-destructive",
+        density === "compact" ? "h-8 px-2.5" : density === "comfortable" ? "h-11 px-4" : "h-9 px-3",
+        variant === "filled" ? "border-border bg-muted" : "border-input bg-background",
+        typeof className === "function" ? className(state) : className,
+      )}
+      {...props}
+    >
+      {children}
+      <ChevronDown aria-hidden="true" className="size-4 shrink-0 opacity-50" />
+    </BaseSelect.Trigger>
+  ),
+);
 SelectTrigger.displayName = "SelectTrigger";
 
 export const SelectValue = React.forwardRef<
@@ -52,10 +58,11 @@ SelectValue.displayName = "SelectValue";
 type SelectContentProps = Omit<React.ComponentProps<typeof BaseSelect.Positioner>, "children"> & {
   children?: React.ReactNode;
   popupClassName?: string;
+  animation?: "none" | "bounce-open";
 };
 
 export const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
-  ({ className, popupClassName, children, ...props }, ref) => (
+  ({ className, popupClassName, children, animation = "none", ...props }, ref) => (
     <BaseSelect.Portal>
       <BaseSelect.Positioner
         ref={ref}
@@ -69,9 +76,11 @@ export const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps
       >
         <BaseSelect.Popup
           className={cn(
-            "max-w-[var(--available-width)] max-h-[var(--available-height)] overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md outline-none",
+            "cl-select-popup max-w-[var(--available-width)] max-h-[var(--available-height)] overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md outline-none",
+            animation === "bounce-open" && "cl-select-bounce-open",
             popupClassName,
           )}
+          data-select-animation={animation}
         >
           <BaseSelect.List className="max-h-[var(--available-height)] overflow-y-auto p-1">
             {children}
@@ -90,7 +99,7 @@ export const SelectItem = React.forwardRef<
   <BaseSelect.Item
     ref={ref}
     className={(state) => cn(
-      "relative flex min-h-8 cursor-default select-none items-center whitespace-normal break-words rounded-sm py-1 pl-2 pr-8 font-sans text-sm text-foreground outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "cl-select-option relative flex min-h-8 cursor-default select-none items-center whitespace-normal break-words rounded-sm py-1 pl-2 pr-8 font-sans text-sm text-foreground outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       typeof className === "function" ? className(state) : className,
     )}
     {...props}

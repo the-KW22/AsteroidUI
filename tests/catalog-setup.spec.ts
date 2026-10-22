@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
-import { installCommand, isLocalRegistry, isLoopbackOrigin, registryOrigin } from "../src/catalog/registry-address";
+import { installCommand, isLocalRegistry, isLoopbackOrigin, registryOrigin } from "../src/site/catalog/registry-address";
 
 test("registry items are served under the full registry path", async ({ request }) => {
   const response = await request.get("/registry/registry.json");
@@ -24,8 +24,8 @@ test("configured loopback origins keep the local registry instructions", () => {
 
 test("AsteroidUI links its selected source and actual distributed MIT license", async ({ page, request }) => {
   await page.goto("/");
-  await expect(page.getByText("AsteroidUI", { exact: true })).toBeVisible();
-  await expect(page.getByRole("link", { name: "GitHub source", exact: true })).toHaveAttribute("href", "https://github.com/the-KW22/AsteroidUI");
+  await expect(page.getByRole("link", { name: "AsteroidUI home", exact: true })).toBeVisible();
+  await expect(page.locator("[data-site-header]").getByRole("link", { name: "GitHub", exact: true })).toHaveAttribute("href", "https://github.com/the-KW22/AsteroidUI");
   await page.getByRole("link", { name: "MIT License", exact: true }).click();
   await expect(page.getByRole("heading", { name: "MIT License", exact: true })).toBeVisible();
   const license = await readFile("LICENSE", "utf8");
@@ -48,6 +48,16 @@ test("getting started links framework guides, styling, and component installatio
   await expect(page.getByRole("link", { name: "Vite React" })).toHaveAttribute("href", "/getting-started/vite");
   await expect(page.getByRole("link", { name: "Button installation" })).toHaveAttribute("href", "/components/button#installation");
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
+test("guide navigation and reading shell stay consistent across setup routes", async ({ page }) => {
+  for (const [route, current] of [["/getting-started", "Overview"], ["/getting-started/nextjs", "Next.js"], ["/getting-started/vite", "Vite"], ["/getting-started/theme", "Theme"]]) {
+    await page.goto(route);
+    const navigation = page.getByRole("navigation", { name: "Getting Started guides" });
+    await expect(navigation.getByRole("link", { name: current, exact: true })).toHaveAttribute("aria-current", "page");
+    await expect(page.locator("[data-guide-page]")).toHaveCSS("background-color", "rgb(17, 17, 17)");
+    await expect(page.locator("#catalog-content")).toBeVisible();
+  }
 });
 
 test("framework guides show configured install commands and correct CSS paths", async ({ page }) => {

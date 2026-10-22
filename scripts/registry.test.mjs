@@ -5,7 +5,7 @@ import os from "node:os"
 import path from "node:path"
 import test, { afterEach, beforeEach } from "node:test"
 import { buildRegistry, configureRegistry, validateRegistry } from "./registry.mjs"
-import { resolveRegistryOrigin } from "../src/catalog/registry-origin.ts"
+import { resolveRegistryOrigin } from "../src/site/catalog/registry-origin.ts"
 
 const projectRoot = process.cwd()
 const inheritedEnvironment = {

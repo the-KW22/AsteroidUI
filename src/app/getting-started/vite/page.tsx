@@ -1,7 +1,7 @@
-import { isLocalRegistry, registryOrigin } from "@/catalog/registry-address";
+import { isLocalRegistry, registryOrigin } from "@/site/catalog/registry-address";
 import Link from "next/link";
-import { CodeBlock } from "@/components/catalog/code-block";
-import { prerequisites, setupSnippets } from "@/catalog/setup-content";
+import { CodeBlock } from "@/site/catalog/code-block";
+import { prerequisites, setupSnippets } from "@/site/guides/setup-content";
 
 export default function ViteSetupPage() {
   return (

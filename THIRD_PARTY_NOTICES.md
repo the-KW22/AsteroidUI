@@ -1,6 +1,6 @@
 # Third-party notices
 
-The nine-component collection adapts the shadcn/ui foundation and uses the packages below. These notices accompany the distributed source through the shared utils item. Upstream shadcn/ui license: https://github.com/shadcn-ui/ui/blob/main/LICENSE.md. Package license texts are reproduced below.
+The nine-component collection adapts the shadcn/ui foundation and uses the packages below. These notices accompany the distributed source through the shared utils item. Upstream shadcn/ui license: https://github.com/shadcn-ui/ui/blob/main/LICENSE.md. MIT/Apache package license texts are reproduced below. Button also depends on GSAP 3.15.0 under Webflow's separate Standard "No Charge" GSAP License: https://gsap.com/community/standard-license/. Consumers should review that license for their intended use; GSAP is not licensed under this project's MIT license.
 
 ## shadcn/ui foundation
 

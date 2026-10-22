@@ -6,7 +6,7 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { registryItemSchema, registrySchema } from "shadcn/schema"
 import nextEnv from "@next/env"
-import { resolveRegistryOrigin, validateRegistryOrigin } from "../src/catalog/registry-origin.ts"
+import { resolveRegistryOrigin, validateRegistryOrigin } from "../src/site/catalog/registry-origin.ts"
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const cliPath = path.join(projectRoot, "node_modules", "shadcn", "dist", "index.js")

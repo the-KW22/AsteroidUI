@@ -1,5 +1,5 @@
-import { CodeBlock } from "@/components/catalog/code-block";
-import { setupSnippets } from "@/catalog/setup-content";
+import { CodeBlock } from "@/site/catalog/code-block";
+import { setupSnippets } from "@/site/guides/setup-content";
 
 export default function SharedStylingPage() {
   return (

@@ -8,7 +8,7 @@
       "type": "registry:ui",
       "title": "Button",
       "description": "An action button with optional interaction feedback and application-controlled loading.",
-      "dependencies": ["@base-ui/react@1.9.0", "class-variance-authority@0.7.1"],
+      "dependencies": ["@base-ui/react@1.9.0", "class-variance-authority@0.7.1", "gsap@3.15.0"],
       "registryDependencies": [
         "http://localhost:3000/registry/spinner.json",
         "http://localhost:3000/registry/utils.json",
@@ -22,7 +22,7 @@
       "name": "input",
       "type": "registry:ui",
       "title": "Input",
-      "description": "A native text field with shared styling and native form semantics.",
+      "description": "A native text field with outline or filled styling, density options, and optional focus feedback.",
       "registryDependencies": [
         "http://localhost:3000/registry/utils.json",
         "http://localhost:3000/registry/library-styles.json"
@@ -39,7 +39,7 @@
       "name": "textarea",
       "type": "registry:ui",
       "title": "Textarea",
-      "description": "A multiline native text field with vertical resizing.",
+      "description": "A multiline native field with density and surface options, optional focus feedback, and vertical resizing.",
       "registryDependencies": [
         "http://localhost:3000/registry/utils.json",
         "http://localhost:3000/registry/library-styles.json"
@@ -56,7 +56,7 @@
       "name": "label",
       "type": "registry:ui",
       "title": "Label",
-      "description": "A native label associating visible text with a form control.",
+      "description": "A native form label with size and emphasis options and explicit field association.",
       "registryDependencies": [
         "http://localhost:3000/registry/utils.json",
         "http://localhost:3000/registry/library-styles.json"
@@ -73,7 +73,7 @@
       "name": "checkbox",
       "type": "registry:ui",
       "title": "Checkbox",
-      "description": "A labeled choice supporting checked and indeterminate states.",
+      "description": "A checkbox with visual size, surface, and optional indicator motion for checked and mixed states.",
       "dependencies": [
         "@base-ui/react@1.9.0",
         "lucide-react@1.56.0"
@@ -94,7 +94,7 @@
       "name": "radio-group",
       "type": "registry:ui",
       "title": "Radio group",
-      "description": "A keyboard-accessible group for choosing one value.",
+      "description": "A keyboard-accessible radio group with item sizing, surface, and optional selection motion.",
       "dependencies": [
         "@base-ui/react@1.9.0",
         "lucide-react@1.56.0"
@@ -115,7 +115,7 @@
       "name": "select",
       "type": "registry:ui",
       "title": "Select",
-      "description": "A keyboard-accessible dropdown for choosing a predefined value.",
+      "description": "A keyboard-accessible select with trigger styling, density, and optional popup motion.",
       "dependencies": [
         "@base-ui/react@1.9.0",
         "lucide-react@1.56.0"
@@ -136,7 +136,7 @@
       "name": "switch",
       "type": "registry:ui",
       "title": "Switch",
-      "description": "A keyboard-accessible control for a binary setting.",
+      "description": "A binary setting control with sizes, surfaces, and optional thumb motion.",
       "dependencies": [
         "@base-ui/react@1.9.0"
       ],
@@ -156,7 +156,7 @@
       "name": "spinner",
       "type": "registry:ui",
       "title": "Spinner",
-      "description": "A reusable loading ring with standalone status and decorative modes.",
+      "description": "A reusable loading ring with size, stroke and speed controls, plus standalone and decorative modes.",
       "dependencies": ["lucide-react@1.56.0"],
       "registryDependencies": [
         "http://localhost:3000/registry/utils.json",

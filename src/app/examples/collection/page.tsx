@@ -1,22 +1,29 @@
+import { FieldsExample } from "@/site/examples/fields-example";
+import { ChoicesExample } from "@/site/examples/choices-example";
+import { SelectExample } from "@/site/examples/select-example";
+import { CollectionExample } from "@/site/examples/collection-example";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { ThemeSelect } from "@/components/catalog/theme-select";
-import { FieldsExample } from "@/examples/fields-example";
-import { ChoicesExample } from "@/examples/choices-example";
-import { SelectExample } from "@/examples/select-example";
-import { CollectionExample } from "@/examples/collection-example";
+import styles from "@/site/support/support-page.module.css";
+
+export const metadata: Metadata = { title: "Collection examples | AsteroidUI", description: "Try the nine AsteroidUI Particles together in a working form." };
 
 export default function CollectionPage() {
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col gap-8 px-5 py-8 sm:px-8">
-      <header className="space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-4"><Link href="/" className="text-sm underline underline-offset-4">AsteroidUI</Link><ThemeSelect /></div>
-        <h1 className="text-3xl font-semibold tracking-tight">Collection examples</h1>
-        <p className="text-muted-foreground">Form controls, states, and a composition example for the selected collection.</p>
-      </header>
-      <FieldsExample />
-      <ChoicesExample />
-      <SelectExample />
-      <CollectionExample />
+    <main className={styles.collectionPage}>
+      <div className={styles.collectionFrame}>
+        <header className={styles.intro}>
+          <h1>Collection examples</h1>
+          <p>Try the nine Particles together: native fields and choices, a Select, and a form that serializes their values.</p>
+          <div className={styles.links}><Link className={styles.secondaryLink} href="/components">Browse Particles</Link></div>
+        </header>
+        <div className={styles.exampleSurface}>
+          <CollectionExample />
+          <FieldsExample />
+          <ChoicesExample />
+          <SelectExample />
+        </div>
+      </div>
     </main>
   );
 }

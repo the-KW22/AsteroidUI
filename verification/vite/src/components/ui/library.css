@@ -185,7 +185,7 @@
     transition: none;
   }
 
-  .cl-button[data-animation="press"]:active:not([data-disabled]):not([data-loading]),
+  .cl-button[data-animation="press"]:is(:focus-visible, :active):not([data-disabled]):not([data-loading]),
   .cl-button[data-animation="lift"]:focus-visible:not([data-disabled]):not([data-loading]) {
     transform: none;
     box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 35%, transparent);

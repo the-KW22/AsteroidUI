@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Button as BaseButton } from "@base-ui/react/button";
 import { cva, type VariantProps } from "class-variance-authority";
+import { gsap } from "gsap";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
@@ -33,7 +34,7 @@ const buttonVariants = cva(
 
 type ButtonProps = React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
-    animation?: "none" | "press" | "lift" | "highlight" | "ripple" | "inset";
+    animation?: "none" | "compression-bloom" | "light-through-glass" | "precision-snap";
     loading?: boolean;
     loadingLabel?: string;
   };
@@ -54,31 +55,108 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       onPointerDown,
       onPointerUp,
       onPointerLeave,
+      onPointerCancel,
+      onKeyDown,
+      onKeyUp,
+      onBlur,
       "aria-label": ariaLabel,
       "aria-labelledby": ariaLabelledby,
       ...props
     },
     ref,
   ) => {
-    const [ripple, setRipple] = React.useState<{ key: number; x: number; y: number } | null>(null);
-    const rippleKey = React.useRef(0);
+    const buttonRef = React.useRef<HTMLButtonElement>(null);
+    const surfaceRef = React.useRef<HTMLSpanElement>(null);
+    const waveRef = React.useRef<HTMLSpanElement>(null);
+    const glintRef = React.useRef<HTMLSpanElement>(null);
+    const edgeRef = React.useRef<HTMLSpanElement>(null);
+    const motionRef = React.useRef<gsap.core.Timeline | null>(null);
+    const originalTransformRef = React.useRef<string | null>(null);
+    const pressedRef = React.useRef(false);
     const pointerFeedbackAllowed = React.useRef(false);
+    const keyboardFeedbackAllowed = React.useRef(false);
+    const originRef = React.useRef({ x: 0, y: 0 });
     const isDisabled = disabled || loading;
 
+    React.useImperativeHandle(ref, () => buttonRef.current!, []);
+
+    const resetMotion = React.useCallback(() => {
+      motionRef.current?.kill();
+      motionRef.current = null;
+      pressedRef.current = false;
+      pointerFeedbackAllowed.current = false;
+      keyboardFeedbackAllowed.current = false;
+      if (buttonRef.current && originalTransformRef.current !== null) {
+        buttonRef.current.style.transform = originalTransformRef.current;
+      }
+      originalTransformRef.current = null;
+      for (const layer of [surfaceRef.current, waveRef.current, glintRef.current, edgeRef.current]) {
+        if (layer) gsap.set(layer, { clearProps: "all" });
+      }
+    }, []);
+
     React.useEffect(() => {
-      if (!ripple) return;
-      const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
-      const clearReducedRipple = () => {
-        if (motionPreference.matches) setRipple(null);
-      };
-      motionPreference.addEventListener("change", clearReducedRipple);
-      return () => motionPreference.removeEventListener("change", clearReducedRipple);
-    }, [ripple]);
+      const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const onChange = () => { if (preference.matches) resetMotion(); };
+      preference.addEventListener("change", onChange);
+      return () => { preference.removeEventListener("change", onChange); resetMotion(); };
+    }, [resetMotion]);
+
+    React.useEffect(() => { if (isDisabled || animation === "none") resetMotion(); }, [animation, isDisabled, resetMotion]);
+
+    const startHold = () => {
+      const button = buttonRef.current;
+      const surface = surfaceRef.current;
+      if (!button || !surface || animation === "none" || isDisabled || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      resetMotion();
+      originalTransformRef.current = button.style.transform;
+      pressedRef.current = true;
+      const bloom = animation === "compression-bloom";
+      const snap = animation === "precision-snap";
+      motionRef.current = gsap.timeline()
+        .to(button, { scaleX: bloom ? 1.025 : snap ? 0.96 : 0.985, scaleY: bloom ? 0.9 : snap ? 0.96 : 0.985, y: bloom ? 2 : 1, duration: snap ? 0.07 : 0.16, ease: snap ? "power4.out" : "power3.out" }, 0)
+        .to(surface, { opacity: snap ? 0.35 : 0.25, duration: snap ? 0.07 : 0.16 }, 0);
+    };
+
+    const release = () => {
+      const button = buttonRef.current;
+      const surface = surfaceRef.current;
+      if (!button || !surface || animation === "none" || isDisabled || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        resetMotion();
+        return;
+      }
+      motionRef.current?.kill();
+      pressedRef.current = false;
+      if (originalTransformRef.current === null) originalTransformRef.current = button.style.transform;
+      const timeline = gsap.timeline({ onComplete: resetMotion });
+      motionRef.current = timeline;
+      const bloom = animation === "compression-bloom";
+      const glass = animation === "light-through-glass";
+      if (bloom) {
+        timeline.to(button, { scaleX: 0.985, scaleY: 1.065, y: -2, duration: 0.2, ease: "back.out(1.5)" }, 0)
+          .to(button, { scaleX: 1, scaleY: 1, y: 0, duration: 0.3, ease: "elastic.out(1, 0.55)" });
+      } else {
+        timeline.to(button, { scaleX: 1, scaleY: 1, y: 0, duration: glass ? 0.2 : 0.11, ease: glass ? "power2.out" : "power4.out" }, 0);
+      }
+      timeline.to(surface, { opacity: 0, duration: bloom ? 0.28 : 0.16 }, 0);
+      if (bloom && waveRef.current) {
+        gsap.set(waveRef.current, { x: originRef.current.x, y: originRef.current.y, xPercent: -50, yPercent: -50, scale: 0.06, opacity: 0.32 });
+        timeline.to(waveRef.current, { scale: 2.5, opacity: 0, duration: 0.48, ease: "power2.out" }, 0.02);
+      }
+      if (glass && glintRef.current && edgeRef.current) {
+        gsap.set(glintRef.current, { xPercent: 0, opacity: 0.95 });
+        timeline.to(glintRef.current, { xPercent: 300, opacity: 0, duration: 0.5, ease: "power2.out" }, 0)
+          .fromTo(edgeRef.current, { opacity: 0.72 }, { opacity: 0, duration: 0.38 }, 0);
+      }
+      if (animation === "precision-snap" && edgeRef.current) {
+        timeline.fromTo(edgeRef.current, { opacity: 0.85 }, { opacity: 0, duration: 0.16 }, 0);
+      }
+    };
 
     return (
       <BaseButton
         {...props}
-        ref={ref}
+        ref={buttonRef}
         type={type}
         disabled={isDisabled}
         focusableWhenDisabled={loading && !disabled}
@@ -90,34 +168,56 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ variant, size }), "cl-button", className)}
         onPointerDown={(event) => {
           onPointerDown?.(event);
-          pointerFeedbackAllowed.current = !event.defaultPrevented;
+          if (event.defaultPrevented || isDisabled) { resetMotion(); return; }
+          if (event.pointerType === "mouse" && event.button !== 0) return;
+          startHold();
+          pointerFeedbackAllowed.current = true;
+          const rect = event.currentTarget.getBoundingClientRect();
+          originRef.current = { x: event.clientX - rect.left, y: event.clientY - rect.top };
         }}
         onPointerUp={(event) => {
           onPointerUp?.(event);
-          if (event.defaultPrevented) pointerFeedbackAllowed.current = false;
+          if (event.defaultPrevented) resetMotion();
         }}
         onPointerLeave={(event) => {
           onPointerLeave?.(event);
+          if (pressedRef.current) resetMotion();
         }}
         onPointerCancel={(event) => {
-          pointerFeedbackAllowed.current = false;
-          props.onPointerCancel?.(event);
+          onPointerCancel?.(event);
+          resetMotion();
+        }}
+        onKeyDown={(event) => {
+          onKeyDown?.(event);
+          if (event.defaultPrevented || event.repeat || isDisabled || (event.key !== " " && event.key !== "Enter")) return;
+          startHold();
+          keyboardFeedbackAllowed.current = true;
+          const rect = event.currentTarget.getBoundingClientRect();
+          originRef.current = { x: rect.width / 2, y: rect.height / 2 };
+        }}
+        onKeyUp={(event) => {
+          onKeyUp?.(event);
+          if (event.defaultPrevented) resetMotion();
+        }}
+        onBlur={(event) => {
+          onBlur?.(event);
+          resetMotion();
         }}
         onClick={(event) => {
           onClick?.(event);
-          if (animation !== "ripple" || event.defaultPrevented || isDisabled) return;
-          if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-          const rect = event.currentTarget.getBoundingClientRect();
-          const pointer = event.detail > 0;
-          if (pointer && !pointerFeedbackAllowed.current) return;
-          const x = pointer ? event.clientX - rect.left : rect.width / 2;
-          const y = pointer ? event.clientY - rect.top : rect.height / 2;
+          if (event.defaultPrevented || isDisabled) { resetMotion(); return; }
+          if (!pointerFeedbackAllowed.current && !keyboardFeedbackAllowed.current) return;
           pointerFeedbackAllowed.current = false;
-          rippleKey.current += 1;
-          setRipple({ key: rippleKey.current, x, y });
+          keyboardFeedbackAllowed.current = false;
+          release();
         }}
       >
+        {animation !== "none" && <span className="cl-button__effects" aria-hidden="true">
+          <span ref={surfaceRef} className="cl-button__surface" />
+          <span ref={waveRef} className="cl-button__wave" />
+          <span ref={glintRef} className="cl-button__glint" />
+          <span ref={edgeRef} className="cl-button__edge" />
+        </span>}
         <span className="cl-button__content">
           <span className="cl-button__idle" aria-hidden={loading || undefined}>{children}</span>
           <span
@@ -128,15 +228,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             <span className={size?.startsWith("icon") ? "sr-only" : undefined}>{loadingLabel}</span>
           </span>
         </span>
-        {animation === "ripple" && ripple && !isDisabled && (
-          <span
-            key={ripple.key}
-            aria-hidden="true"
-            className="cl-button__ripple"
-            style={{ "--ripple-x": `${ripple.x}px`, "--ripple-y": `${ripple.y}px` } as React.CSSProperties}
-            onAnimationEnd={() => setRipple(null)}
-          />
-        )}
       </BaseButton>
     );
   },

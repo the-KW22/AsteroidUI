@@ -23,7 +23,8 @@ test("collection inherits shared settings and fits light/dark narrow layouts", a
   await page.goto("/examples/collection");
   const form = page.getByRole("region", { name: "Collection form", exact: true });
   for (const appearance of ["light", "dark"]) {
-    await page.getByLabel("Appearance").selectOption(appearance);
+    await page.getByRole("group", { name: "Appearance" }).getByRole("button", { name: appearance === "light" ? "Light" : "Dark", exact: true }).click();
+    await page.keyboard.press("Tab");
     for (const control of [form.getByLabel("Name", { exact: true }), form.getByLabel("Notes", { exact: true }), form.getByRole("combobox", { name: "Topic" })]) {
       await expect(control).toBeVisible();
       await control.focus();

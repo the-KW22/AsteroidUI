@@ -1,6 +1,7 @@
 node_modules/
 .npm-cache/
 .playwright-browsers/
+.taste-skill/
 .next/
 next-env.d.ts
 out/
@@ -16,9 +17,3 @@ test-results/
 npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
-
-# Local project notes.
-docs/
-AGENTS.md
-CONTEXT.md
-verification/README.md

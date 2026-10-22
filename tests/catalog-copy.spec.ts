@@ -1,16 +1,22 @@
-import { readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
-import { installCommand } from "../src/catalog/registry-address";
+import { installCommand } from "../src/site/catalog/registry-address";
 
-test("Button source copying matches the maintained file exactly", async ({ page, context }) => {
-  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+test("Button agent menu copies installation guidance in both formats", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText: async (text: string) => sessionStorage.setItem("agent-brief", text) },
+    });
+  });
   await page.goto("/components/button");
-  const source = page.locator("details").filter({ has: page.locator("summary", { hasText: "src/components/ui/button.tsx" }) });
-  await source.locator("summary").click();
-  const maintained = await readFile("src/components/ui/button.tsx", "utf8");
-  expect((await source.locator("pre code").textContent())?.replace(/\r\n/g, "\n")).toBe(maintained.replace(/\r\n/g, "\n"));
-  await source.getByRole("button", { name: "Copy src/components/ui/button.tsx", exact: true }).click();
-  await expect.poll(async () => (await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, "\n")).toBe(maintained.replace(/\r\n/g, "\n"));
+  const menu = page.locator("summary").filter({ hasText: "Copy for agent" });
+  await menu.click();
+  await page.getByRole("button", { name: "Copy as Markdown" }).click();
+  await expect.poll(() => page.evaluate(() => sessionStorage.getItem("agent-brief"))).toContain(installCommand("button"));
+  await expect.poll(() => page.evaluate(() => sessionStorage.getItem("agent-brief"))).toContain("# Install and configure AsteroidUI Button");
+  await menu.click();
+  await page.getByRole("button", { name: "Copy as plain text" }).click();
+  await expect.poll(() => page.evaluate(() => sessionStorage.getItem("agent-brief"))).toContain("Customization options:");
 });
 
 test("clipboard failure leaves installation text accessible and selectable", async ({ page }) => {
@@ -39,11 +45,11 @@ test("Button copied usage follows the selected preview state", async ({ page }) 
     });
   });
   await page.goto("/components/button");
-  const preview = page.locator("section[aria-labelledby='preview-title']");
-  await preview.getByLabel("Animation").selectOption("lift");
+  const preview = page.locator("#button-detail-content");
+  await preview.getByLabel("Animation").selectOption("light-through-glass");
   await preview.getByLabel("Loading").check();
-  const usage = await preview.locator("pre code").textContent();
-  await preview.getByRole("button", { name: "Copy code" }).click();
+  const usage = await page.locator("#usage pre code").textContent();
+  await page.locator("#usage").getByRole("button", { name: "Copy" }).click();
   await expect.poll(() => page.evaluate(() => (window as Window & { copiedText?: string }).copiedText)).toBe(usage);
-  await expect(preview.getByRole("button", { name: "Saving changes", exact: true })).toHaveAttribute("data-animation", "lift");
+  await expect(preview.getByRole("button", { name: "Saving changes", exact: true })).toHaveAttribute("data-animation", "light-through-glass");
 });

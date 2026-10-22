@@ -3,6 +3,8 @@ import { cn } from "@/lib/utils";
 
 type SpinnerProps = {
   size?: number;
+  strokeWidth?: number;
+  speed?: "calm" | "default";
   className?: string;
   style?: React.CSSProperties;
   label?: string;
@@ -11,19 +13,22 @@ type SpinnerProps = {
 
 export function Spinner({
   size = 16,
+  strokeWidth = 2,
+  speed = "default",
   className,
   style,
   label = "Loading",
   decorative = false,
 }: SpinnerProps) {
   const validSize = Number.isFinite(size) && size > 0 ? size : 16;
+  const validStrokeWidth = Number.isFinite(strokeWidth) && strokeWidth > 0 ? strokeWidth : 2;
   const icon = (
     <LoaderCircle
       aria-hidden="true"
-      className="animate-spin motion-reduce:animate-none"
+      className={cn("animate-spin motion-reduce:animate-none", speed === "calm" && "cl-spinner-calm")}
       size={validSize}
-      strokeWidth={2}
-      style={{ color: "currentColor", ...style }}
+      strokeWidth={validStrokeWidth}
+      style={{ color: "currentColor", animationDuration: speed === "calm" ? "2.2s" : undefined, ...style }}
     />
   );
 

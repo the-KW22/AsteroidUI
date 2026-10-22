@@ -22,7 +22,7 @@
   --input: #737373;
   --ring: #525252;
   --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --radius: 0.625rem;
+  --radius: 0.875rem;
 }
 
 .dark {
@@ -79,37 +79,53 @@
   isolation: isolate;
   overflow: visible;
   overflow-wrap: anywhere;
-  transition: transform 100ms ease, filter 110ms ease, box-shadow 110ms ease, background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
 }
 
-.cl-button[data-animation="press"]:active:not([data-disabled]):not([data-loading]) {
-  transform: scale(0.98);
+.cl-button__effects {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
 }
 
-@media (hover: hover) {
-  .cl-button[data-animation="lift"]:hover:not([data-disabled]):not([data-loading]) {
-    transform: translateY(-1px);
-  }
-
-  .cl-button[data-animation="highlight"]:hover:not([data-disabled]):not([data-loading]) {
-    box-shadow: inset 0 0 0 100vmax color-mix(in srgb, currentColor 12%, transparent);
-  }
-
-  .cl-button[data-animation="inset"]:hover:not([data-disabled]):not([data-loading]) {
-    box-shadow: inset 0 1px 3px color-mix(in srgb, currentColor 30%, transparent);
-  }
+.cl-button__surface,
+.cl-button__edge {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
 }
 
-.cl-button[data-animation="lift"]:focus-visible:not([data-disabled]):not([data-loading]) {
-  transform: translateY(-1px);
+.cl-button__surface {
+  box-shadow: inset 0 2px 5px color-mix(in srgb, currentColor 70%, transparent), inset 0 0 0 1px currentColor;
 }
 
-.cl-button[data-animation="highlight"]:is(:focus-visible, :active):not([data-disabled]):not([data-loading]) {
-  box-shadow: inset 0 0 0 100vmax color-mix(in srgb, currentColor 12%, transparent);
+.cl-button__edge {
+  border: 1px solid currentColor;
 }
 
-.cl-button[data-animation="inset"]:is(:focus-visible, :active):not([data-disabled]):not([data-loading]) {
-  box-shadow: inset 0 1px 3px color-mix(in srgb, currentColor 30%, transparent);
+.cl-button__wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: max(100%, 8rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+}
+
+.cl-button__glint {
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, currentColor 16%, transparent) 25%, color-mix(in srgb, currentColor 60%, transparent) 50%, color-mix(in srgb, currentColor 16%, transparent) 75%, transparent);
+  opacity: 0;
+  transform: skewX(-18deg);
 }
 
 .cl-button__content {
@@ -150,71 +166,152 @@
   display: inline-flex;
 }
 
-.cl-button__ripple {
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  overflow: hidden;
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-.cl-button__ripple::after {
-  position: absolute;
-  top: var(--ripple-y);
-  left: var(--ripple-x);
-  width: 0.5rem;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: currentColor;
-  content: "";
-  opacity: 0.2;
-  transform: translate(-50%, -50%);
-  animation: cl-ripple 200ms ease-out forwards;
-}
-
-@keyframes cl-ripple {
-  to {
-    width: max(150%, 8rem);
-    opacity: 0;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .cl-button {
     transition: none;
   }
 
-  .cl-button[data-animation="press"]:active:not([data-disabled]):not([data-loading]),
-  .cl-button[data-animation="lift"]:focus-visible:not([data-disabled]):not([data-loading]) {
-    transform: none;
+  .cl-button[data-animation]:not([data-animation="none"]):is(:focus-visible, :active):not([data-disabled]):not([data-loading]) {
     box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 35%, transparent);
   }
 
-  .cl-button[data-animation="highlight"]:is(:focus-visible, :active):not([data-disabled]):not([data-loading]) {
-    box-shadow: inset 0 0 0 100vmax color-mix(in srgb, currentColor 12%, transparent);
-  }
-
-  .cl-button[data-animation="inset"]:is(:focus-visible, :active):not([data-disabled]):not([data-loading]) {
-    box-shadow: inset 0 1px 3px color-mix(in srgb, currentColor 30%, transparent);
-  }
-
-  .cl-button[data-animation="ripple"]:is(:focus-visible, :active):not([data-disabled]):not([data-loading]) {
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 35%, transparent);
-  }
-
-  .cl-button__ripple {
-    visibility: hidden;
-  }
-
-  .cl-button__ripple::after {
-    animation: none;
+  .cl-button__effects {
+    display: none;
   }
 }
 
-@media (prefers-reduced-motion: reduce) and (hover: hover) {
-  .cl-button[data-animation="lift"]:hover:not([data-disabled]):not([data-loading]) {
-    transform: none;
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 35%, transparent);
+/* Optional switch motion stays inside the track; checked state never waits on a tween. */
+.cl-switch-motion { position: relative; isolation: isolate; }
+.cl-switch-motion::before {
+  position: absolute;
+  inset: 3px;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--ring) 65%, transparent), transparent);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+}
+.cl-switch-thumb { position: relative; z-index: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .cl-switch-motion[data-animation="guided-glide"] { transition: background-color 600ms ease-out; }
+  .cl-switch-motion[data-animation="guided-glide"] .cl-switch-thumb {
+    transition: transform 600ms cubic-bezier(.22, .65, .24, 1);
+  }
+  .cl-switch-motion[data-animation="guided-glide"][data-checked] .cl-switch-thumb {
+    animation: cl-switch-glide-on 600ms cubic-bezier(.22, .65, .24, 1);
+  }
+  .cl-switch-motion[data-animation="guided-glide"]:not([data-checked]) .cl-switch-thumb {
+    animation: cl-switch-glide-off 600ms cubic-bezier(.22, .65, .24, 1);
+  }
+  .cl-switch-motion[data-animation="guided-glide"][data-checked]::before {
+    animation: cl-switch-trail-on 600ms ease-out both;
+  }
+  .cl-switch-motion[data-animation="guided-glide"]:not([data-checked])::before {
+    animation: cl-switch-trail-off 600ms ease-out both;
   }
 }
+@keyframes cl-switch-glide-on {
+  0% { scale: 1 1; }
+  45% { scale: 1.12 .94; }
+  80% { scale: .98 1.02; }
+  100% { scale: 1 1; }
+}
+@keyframes cl-switch-glide-off {
+  0% { scale: 1 1; }
+  45% { scale: 1.12 .94; }
+  80% { scale: .98 1.02; }
+  100% { scale: 1 1; }
+}
+@keyframes cl-switch-trail-on {
+  0% { opacity: 0; transform: translateX(-18%); }
+  45% { opacity: .85; }
+  100% { opacity: 0; transform: translateX(18%); }
+}
+@keyframes cl-switch-trail-off {
+  0% { opacity: 0; transform: translateX(18%); }
+  45% { opacity: .85; }
+  100% { opacity: 0; transform: translateX(-18%); }
+}
+/* The focus light stays on the border; the text surface never receives a gradient. */
+@property --field-glow-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+.cl-field-focus-wake { --field-surface: var(--background); }
+.cl-field-focus-wake--filled { --field-surface: var(--muted); }
+.cl-field-focus-wake:is(:focus, [data-preview-focus]) {
+  border-color: transparent;
+  background-image: linear-gradient(var(--field-surface), var(--field-surface)), conic-gradient(from var(--field-glow-angle), transparent 0deg 270deg, var(--ring) 315deg, transparent 360deg);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--ring) 18%, transparent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cl-field-focus-wake:is(:focus, [data-preview-focus]) { animation: cl-field-border-orbit 2.2s linear infinite; }
+}
+@keyframes cl-field-border-orbit { to { --field-glow-angle: 360deg; } }
+
+/* Selection is immediate; the optional marks provide a second, authored beat. */
+.choice-checkbox { position: relative; }
+.choice-checkbox::after { position: absolute; inset: -3px; border: 1px solid color-mix(in srgb, var(--primary) 45%, transparent); border-radius: inherit; content: ""; opacity: 0; pointer-events: none; }
+.choice-checkbox__indicator { transform: scale(.72); opacity: 0; }
+.choice-checkbox[data-checked] .choice-checkbox__indicator,
+.choice-checkbox[data-indeterminate] .choice-checkbox__indicator { transform: scale(1); opacity: 1; }
+.choice-checkbox__mark path { stroke-dasharray: 30; stroke-dashoffset: 30; }
+.choice-checkbox[data-checked] .choice-checkbox__mark path { stroke-dashoffset: 0; }
+.choice-radio__indicator { position: relative; display: grid; width: 100%; height: 100%; place-items: center; pointer-events: none; }
+.choice-radio__center { width: 48%; height: 48%; border-radius: 50%; background: currentColor; opacity: 0; transform: scale(.15); }
+.choice-radio__ring { position: absolute; inset: 1px; border: 1px solid currentColor; border-radius: 50%; opacity: 0; transform: scale(.55); }
+.choice-radio[data-checked] .choice-radio__center { opacity: 1; transform: scale(1); }
+@media (prefers-reduced-motion: no-preference) {
+  .choice-checkbox:not(.choice-checkbox--still):not([data-disabled]) .choice-checkbox__indicator { transition: transform 220ms cubic-bezier(.16, 1, .3, 1), opacity 130ms ease-out; }
+  .choice-checkbox:not(.choice-checkbox--still):not([data-disabled]) .choice-checkbox__mark path { transition: stroke-dashoffset 320ms cubic-bezier(.16, 1, .3, 1); }
+  .choice-checkbox:not(.choice-checkbox--still):not([data-disabled])[data-checked]::after { animation: choice-checkbox-halo 420ms ease-out both; }
+  .choice-checkbox:not(.choice-checkbox--still):not([data-disabled])[data-indeterminate]::after { animation: choice-checkbox-halo-indeterminate 420ms ease-out both; }
+  .choice-radio:not(.choice-radio--still):not([data-disabled]) .choice-radio__center { transition: transform 280ms cubic-bezier(.16, 1, .3, 1), opacity 150ms ease-out; }
+  .choice-radio:not(.choice-radio--still):not([data-disabled])[data-checked] .choice-radio__ring { animation: choice-radio-confirm 410ms cubic-bezier(.16, 1, .3, 1) both; }
+}
+@keyframes choice-checkbox-halo {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary) 30%, transparent); opacity: .85; }
+  100% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--primary) 0%, transparent); opacity: 0; }
+}
+@keyframes choice-checkbox-halo-indeterminate {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary) 30%, transparent); opacity: .85; }
+  100% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--primary) 0%, transparent); opacity: 0; }
+}
+@keyframes choice-radio-confirm {
+  0% { opacity: .85; transform: scale(.55); }
+  55% { opacity: .6; }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+
+/* The popup drops, overshoots, then returns to its anchor without moving layout. */
+@media (prefers-reduced-motion: no-preference) {
+  .cl-select-popup[data-select-animation="bounce-open"]:not([data-ending-style]),
+  .cl-select-popup.cl-select-bounce-open[data-select-motion-preview] {
+    transform-origin: center top;
+    animation: cl-select-bounce-open 520ms both;
+  }
+  .cl-select-popup[data-select-animation="bounce-open"][data-ending-style] {
+    animation: cl-select-bounce-close 130ms ease-in both;
+  }
+}
+@keyframes cl-select-bounce-open {
+  0% { opacity: 0; transform: translateY(-12px) scaleY(.94); }
+  58% { opacity: 1; transform: translateY(6px) scaleY(1.035); }
+  78% { transform: translateY(-3px) scaleY(.985); }
+  100% { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+@keyframes cl-select-bounce-close {
+  to { opacity: 0; transform: translateY(-5px) scaleY(.98); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cl-select-popup.cl-select-bounce-open { animation: none; }
+}
+
+/* Calm keeps the same ring, but makes its orbit deliberately less mechanical. */
+.cl-spinner-calm { animation-name: cl-spinner-calm-orbit; animation-timing-function: cubic-bezier(.37, 0, .3, 1); }
+@keyframes cl-spinner-calm-orbit {
+  0% { transform: rotate(0deg); opacity: .68; }
+  42% { transform: rotate(175deg); opacity: 1; }
+  78% { transform: rotate(286deg); opacity: .82; }
+  100% { transform: rotate(360deg); opacity: .68; }
+}
+@media (prefers-reduced-motion: reduce) { .cl-spinner-calm { animation: none; opacity: 1; } }

@@ -2,6 +2,15 @@
 
 A React and TypeScript component collection with a documentation-style catalog. All nine selected basics have local detail pages, live examples and a shadcn-compatible registry, with independent Next.js and Vite consumer verification. Catalog navigation and Getting Started pages are complete locally; public distribution and release remain later work.
 
+## Source layout
+
+- `src/components/ui/`, `src/lib/`, and `src/styles/`: source delivered through the registry.
+- `src/site/catalog/`, `src/site/landing/`, and `src/site/examples/`: catalog pages, landing experience, and demonstrations.
+- `src/site/shell/`, `src/site/guides/`, and `src/site/support/`: shared site chrome, setup guides, and supporting-page styles.
+- `src/app/`: Next.js routes and root layout.
+- `registry.json` and `scripts/registry.mjs`: maintained registry metadata and generation; `public/registry/` is generated output.
+- `tests/` and `verification/`: catalog checks and independent Next.js/Vite consumers.
+
 ## Development
 
 Use Node.js 24.15.0 and npm 11.12.1 as the current baseline. Exact dependencies are pinned in `package.json` and `package-lock.json`.
@@ -34,6 +43,18 @@ npx shadcn@4.21.4 add http://localhost:3000/registry/button.json
 The registry installs maintained component source, dependencies, shared styles and third-party notices. Import the installed `library.css` after Tailwind in the consuming application's global stylesheet. The consuming application owns appearance and custom-font loading. All nine selected basics have individual `/registry/<slug>.json` items; `utils` and `library-styles` are shared installation dependencies.
 
 Source repository: [the-KW22/AsteroidUI](https://github.com/the-KW22/AsteroidUI). AsteroidUI uses the [MIT license](LICENSE), copyright 2026 Leow Kai Wen, with retained [third-party notices](THIRD_PARTY_NOTICES.md). Each component installation includes both license files through its shared dependency graph.
+
+## Verification
+
+After `npm ci`, install the browser engines and build before running the catalog checks:
+
+```sh
+npx playwright install chromium firefox webkit
+npm run build
+npm test
+```
+
+The catalog suite uses installed Google Chrome when available, otherwise Chromium, plus Firefox and WebKit. Keep port 3000 free so Playwright can start the production server.
 
 ## Public address and Vercel
 

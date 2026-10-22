@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "spinner",
   "title": "Spinner",
-  "description": "A reusable loading ring with standalone status and decorative modes.",
+  "description": "A reusable loading ring with size, stroke and speed controls, plus standalone and decorative modes.",
   "dependencies": [
     "lucide-react@1.56.0"
   ],
@@ -13,7 +13,7 @@
   "files": [
     {
       "path": "src/components/ui/spinner.tsx",
-      "content": "import { LoaderCircle } from \"lucide-react\";\nimport { cn } from \"@/lib/utils\";\n\ntype SpinnerProps = {\n  size?: number;\n  className?: string;\n  style?: React.CSSProperties;\n  label?: string;\n  decorative?: boolean;\n};\n\nexport function Spinner({\n  size = 16,\n  className,\n  style,\n  label = \"Loading\",\n  decorative = false,\n}: SpinnerProps) {\n  const validSize = Number.isFinite(size) && size > 0 ? size : 16;\n  const icon = (\n    <LoaderCircle\n      aria-hidden=\"true\"\n      className=\"animate-spin motion-reduce:animate-none\"\n      size={validSize}\n      strokeWidth={2}\n      style={{ color: \"currentColor\", ...style }}\n    />\n  );\n\n  if (decorative) {\n    return <span aria-hidden=\"true\" className={cn(\"inline-flex\", className)}>{icon}</span>;\n  }\n\n  return (\n    <span aria-live=\"polite\" className={cn(\"inline-flex items-center gap-2\", className)} role=\"status\">\n      {icon}\n      <span>{label}</span>\n    </span>\n  );\n}\n",
+      "content": "import { LoaderCircle } from \"lucide-react\";\nimport { cn } from \"@/lib/utils\";\n\ntype SpinnerProps = {\n  size?: number;\n  strokeWidth?: number;\n  speed?: \"calm\" | \"default\";\n  className?: string;\n  style?: React.CSSProperties;\n  label?: string;\n  decorative?: boolean;\n};\n\nexport function Spinner({\n  size = 16,\n  strokeWidth = 2,\n  speed = \"default\",\n  className,\n  style,\n  label = \"Loading\",\n  decorative = false,\n}: SpinnerProps) {\n  const validSize = Number.isFinite(size) && size > 0 ? size : 16;\n  const validStrokeWidth = Number.isFinite(strokeWidth) && strokeWidth > 0 ? strokeWidth : 2;\n  const icon = (\n    <LoaderCircle\n      aria-hidden=\"true\"\n      className={cn(\"animate-spin motion-reduce:animate-none\", speed === \"calm\" && \"cl-spinner-calm\")}\n      size={validSize}\n      strokeWidth={validStrokeWidth}\n      style={{ color: \"currentColor\", animationDuration: speed === \"calm\" ? \"2.2s\" : undefined, ...style }}\n    />\n  );\n\n  if (decorative) {\n    return <span aria-hidden=\"true\" className={cn(\"inline-flex\", className)}>{icon}</span>;\n  }\n\n  return (\n    <span aria-live=\"polite\" className={cn(\"inline-flex items-center gap-2\", className)} role=\"status\">\n      {icon}\n      <span>{label}</span>\n    </span>\n  );\n}\n",
       "type": "registry:ui",
       "target": "@ui/spinner.tsx"
     }

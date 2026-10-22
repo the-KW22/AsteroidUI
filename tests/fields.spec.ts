@@ -53,12 +53,47 @@ test("native read-only, disabled, invalid and form serialization behavior is pre
 test("fields expose visible keyboard focus and shared token styling", async ({ page }) => {
   const fields = page.getByRole("region", { name: "Fields examples" });
   const name = fields.getByRole("textbox", { name: "Name" });
+  const message = fields.getByRole("textbox", { name: "Message", exact: true });
 
   await name.focus();
   await page.keyboard.press("Tab");
   await page.keyboard.press("Shift+Tab");
   await expect(name).toHaveCSS("outline-style", "solid");
   await expect(name).toHaveCSS("height", "36px");
-  await expect(name).toHaveCSS("border-radius", "8px");
+  await expect(name).toHaveCSS("border-radius", "11.2px");
+  await expect(name).toHaveCSS("border-top-style", "solid");
+  await expect(name).toHaveClass(/border-input/);
+  await expect(name).toHaveClass(/bg-background/);
+  await expect(message).toHaveCSS("min-height", "80px");
+  await expect(message).toHaveCSS("resize", "vertical");
+  await expect(message).toHaveClass(/border-input/);
+  await expect(message).toHaveClass(/bg-background/);
   expect(await fields.getByText("Name", { exact: true }).evaluate((element) => getComputedStyle(element).fontFamily)).toContain("ui-sans-serif");
+  await expect(fields.getByText("Name", { exact: true })).toHaveClass(/font-medium/);
+  await expect(fields.getByText("Name", { exact: true })).toHaveCSS("font-size", "14px");
+  await expect(fields.getByText("Name", { exact: true })).toHaveCSS("font-weight", "500");
+});
+
+test("focus-wake fields expose distinct preview hooks without moving native focus", async ({ page }) => {
+  await page.goto("/components/input");
+  const input = page.locator("#preview").getByRole("textbox", { name: "Name" });
+  await page.getByRole("combobox", { name: "Animation" }).selectOption("focus-wake");
+  await expect(input).toHaveClass(/cl-field-focus-wake--input/);
+  await input.evaluate((element) => element.setAttribute("data-preview-focus", ""));
+  await expect(input).not.toBeFocused();
+  await expect(input).toHaveAttribute("data-preview-focus", "");
+  expect(await input.evaluate((element) => getComputedStyle(element).backgroundImage)).toContain("conic-gradient");
+  await input.evaluate((element) => element.removeAttribute("data-preview-focus"));
+  await expect(input).toHaveCSS("background-image", "none");
+
+  await page.goto("/components/textarea");
+  const textarea = page.locator("#preview").getByRole("textbox", { name: "Message" });
+  await page.getByRole("combobox", { name: "Animation" }).selectOption("focus-wake");
+  await expect(textarea).toHaveClass(/cl-field-focus-wake--textarea/);
+  await textarea.evaluate((element) => element.setAttribute("data-preview-focus", ""));
+  await expect(textarea).not.toBeFocused();
+  await expect(textarea).toHaveAttribute("data-preview-focus", "");
+  expect(await textarea.evaluate((element) => getComputedStyle(element).backgroundImage)).toContain("conic-gradient");
+  await textarea.evaluate((element) => element.removeAttribute("data-preview-focus"));
+  await expect(textarea).toHaveCSS("background-image", "none");
 });

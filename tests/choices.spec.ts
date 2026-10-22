@@ -66,6 +66,45 @@ test("checkbox, radio, and switch show independent keyboard focus outlines", asy
   }
 });
 
+test("choice defaults retain their static dimensions and update without waiting for motion", async ({ page }) => {
+  const region = page.getByRole("region", { name: "Choices examples" });
+  const checkbox = region.getByRole("checkbox", { name: "Accept terms (uncontrolled)" });
+  const radio = region.getByRole("radio", { name: "Comfortable" });
+  const toggle = region.getByRole("switch", { name: "Sync settings (uncontrolled)" });
+
+  await expect(checkbox).toHaveCSS("width", "16px");
+  await expect(checkbox).toHaveCSS("height", "16px");
+  await expect(radio).toHaveCSS("width", "16px");
+  await expect(radio).toHaveCSS("height", "16px");
+  await expect(radio.locator("svg")).toBeVisible();
+  await expect(toggle).toHaveCSS("width", "40px");
+  await expect(toggle).toHaveCSS("height", "24px");
+
+  await toggle.uncheck();
+  await expect(toggle).not.toBeChecked();
+  await toggle.check();
+  await expect(toggle).toBeChecked();
+});
+
+test("choice selection state commits immediately through rapid pointer and keyboard changes", async ({ page }) => {
+  const region = page.getByRole("region", { name: "Choices examples" });
+  const checkbox = region.getByRole("checkbox", { name: "Accept terms (uncontrolled)" });
+  const group = region.getByRole("radiogroup", { name: "Density" });
+  const compact = group.getByRole("radio", { name: "Compact" });
+  const comfortable = group.getByRole("radio", { name: "Comfortable" });
+
+  await checkbox.uncheck();
+  await checkbox.check();
+  await checkbox.uncheck();
+  await expect(checkbox).not.toBeChecked();
+
+  await compact.click();
+  await comfortable.focus();
+  await page.keyboard.press("ArrowLeft");
+  await expect(compact).toBeChecked();
+  await expect(comfortable).not.toBeChecked();
+});
+
 test("read-only choices ignore pointer and keyboard changes", async ({ page }) => {
   const region = page.getByRole("region", { name: "Choices examples" });
   const checkbox = region.getByRole("checkbox", { name: "Read-only checkbox" });

@@ -1,0 +1,38 @@
+.darkPopup { --foreground: #f3f4f6; --popover: #262626; --popover-foreground: #f3f4f6; --border: #626262; --accent: #373737; --accent-foreground: #f3f4f6; color-scheme: dark; }
+.lightPopup { --foreground: #171717; --popover: #e9e9e9; --popover-foreground: #171717; --border: #999; --accent: #d5d5d5; --accent-foreground: #171717; color-scheme: light; }
+.contract h2 { margin: 0; font-size: clamp(26px, 2.8vw, 34px); font-weight: 570; letter-spacing: -.03em; }
+.contract > p { max-width: 65ch; margin: 14px 0 22px; color: #bcbcbc; font-size: 14px; line-height: 1.6; }
+.states { border: 1px solid #555; border-radius: 16px; background: #1c1c1c; }
+.states summary { padding: 16px 20px; color: #f3f4f6; font-size: 14px; cursor: pointer; }
+.states[open] summary { border-bottom: 1px solid #484848; }
+.statesBody { padding: 20px; }
+.statesBody > section { padding: 0; border: 0; background: transparent; }
+.statesBody > p { margin: 0 0 18px; color: #bcbcbc; font-size: 13px; line-height: 1.6; }
+.statesBody a, .install a { color: #e0ecf8; text-decoration: underline; text-underline-offset: 4px; }
+.statesBody > p:last-child { margin: 18px 0 0; }
+.install p { max-width: 75ch; margin: 16px 0; color: #bcbcbc; font-size: 14px; line-height: 1.6; }
+.install code { color: #e1ebf5; }
+.companions { margin-top: 24px; }
+.companions h3 { margin: 0 0 10px; font-size: 17px; font-weight: 600; }
+.companions > div + div { margin-top: 15px; }
+.comparison table tbody td:last-child { width: 40%; text-align: left; white-space: normal; }
+.comparison table tbody td:last-child > * { max-width: 100%; }
+.comparison .responseGrid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 205px), 1fr)); }
+.comparison .responseGrid > div { min-width: 0; }
+.comparison .responseGrid > div > div { justify-content: flex-start; overflow: visible; padding: 14px; }
+.contractNote { max-width: 75ch; margin: 30px 0 20px; color: #bcbcbc; font-size: 13px; line-height: 1.6; }
+.responseHint { margin: 12px 0 0; color: #bcbcbc; font-size: 12px; line-height: 1.5; }
+.autoSample { position: relative; width: 100%; pointer-events: none; }
+.autoSample input[data-preview-focus], .autoSample textarea[data-preview-focus] { outline: 2px solid var(--ring); outline-offset: 2px; }
+.autoSample input[data-preview-focus]:not(:global(.cl-field-focus-wake)), .autoSample textarea[data-preview-focus]:not(:global(.cl-field-focus-wake)) { border-color: var(--ring); }
+.autoSample:not([data-loop-active]) svg { animation-play-state: paused; }
+.selectSample { min-height: 158px; overflow: hidden; border-radius: 8px; }
+.comparison .selectGhost { position: absolute; top: 66px; left: 0; width: 100%; padding: 4px; border: 1px solid var(--border); border-radius: 7px; background: var(--popover); color: var(--popover-foreground); box-shadow: 0 8px 20px rgb(0 0 0 / 22%); }
+.selectGhost > div { padding: 6px 9px; border-radius: 4px; font-size: 13px; }
+.selectGhost > div:first-child { background: var(--accent); }
+.comparison .selectGhost:not([data-select-motion-preview]) { visibility: hidden; opacity: 0; }
+@media (max-width: 650px) {
+  .comparison table tbody tr { grid-template-columns: minmax(0, 1fr); }
+  .comparison table tbody th { width: 100%; }
+  .comparison table tbody td:last-child { grid-column: 1; grid-row: auto; width: 100%; }
+}

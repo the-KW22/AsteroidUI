@@ -8,3 +8,9 @@ body {
   font-family: var(--font-sans);
   line-height: 1.5;
 }
+
+main, [id] { scroll-margin-top: 76px; }
+
+@media (max-width: 899px) {
+  main, [id] { scroll-margin-top: 124px; }
+}

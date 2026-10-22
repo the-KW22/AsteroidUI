@@ -16,6 +16,24 @@ test("renders associated labels, placeholders, and initial form values", async (
   await expect(area.getByRole("status", { name: "Controlled value" })).toHaveText("pear");
 });
 
+test("default trigger sizing and popup positioning remain unchanged", async ({ page }) => {
+  const area = examples(page);
+  const trigger = area.getByRole("combobox", { name: "Favorite fruit" });
+  await expect(trigger).toHaveCSS("height", "36px");
+  await trigger.click();
+
+  const popup = page.getByRole("listbox");
+  await expect(popup).toBeVisible();
+  await expect(popup.locator("..")).toHaveAttribute("data-select-animation", "none");
+  const transformOrigin = await popup.evaluate((element) =>
+    getComputedStyle(element.parentElement!).getPropertyValue("--transform-origin"),
+  );
+  expect(transformOrigin).not.toBe("");
+  await page.keyboard.press("Escape");
+  await expect(popup).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+});
+
 test("pointer selection updates uncontrolled and controlled values and form values", async ({ page }) => {
   const area = examples(page);
   await area.getByRole("combobox", { name: "Favorite fruit" }).click();
@@ -48,6 +66,21 @@ test("keyboard selection supports typeahead and Escape returns focus", async ({ 
   await page.keyboard.press("Escape");
   await expect(trigger).toBeFocused();
   await expect(page.getByRole("listbox")).toHaveCount(0);
+});
+
+test("bounce-open exposes the reusable popup motion hook and Escape returns focus", async ({ page }) => {
+  await page.goto("/components/select");
+  await page.getByRole("combobox", { name: "Animation" }).selectOption("bounce-open");
+  const trigger = page.locator("#preview").getByRole("combobox", { name: "Favorite fruit" });
+  await trigger.click();
+
+  const popup = page.getByRole("listbox");
+  await expect(popup.locator("..")).toHaveAttribute("data-select-animation", "bounce-open");
+  await expect(popup.locator("..")).toHaveClass(/cl-select-bounce-open/);
+  await expect(popup.getByRole("option").first()).toHaveClass(/cl-select-option/);
+  await page.keyboard.press("Escape");
+  await expect(popup).toHaveCount(0);
+  await expect(trigger).toBeFocused();
 });
 
 test("disabled roots and items cannot be selected", async ({ page }) => {

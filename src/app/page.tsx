@@ -1,9 +1,14 @@
 import Link from "next/link";
-import { ThemeSelect } from "@/components/catalog/theme-select";
-import { ButtonAsyncExample } from "@/examples/button-async-example";
-import { SpinnerExample } from "@/examples/spinner-example";
+import { ButtonAsyncExample } from "@/site/examples/button-async-example";
+import { SpinnerExample } from "@/site/examples/spinner-example";
+import { DesktopOpening } from "@/site/landing/desktop-opening";
+import styles from "@/site/landing/landing.module.css";
 
 export default function HomePage() {
+  return <><DesktopOpening /><div className={styles.legacy}><LegacyHomePage /></div></>;
+}
+
+function LegacyHomePage() {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-12 px-6 py-10 sm:px-10 sm:py-16">
       <header className="flex flex-wrap items-center justify-between gap-6">
@@ -11,7 +16,6 @@ export default function HomePage() {
           <p className="text-sm font-medium text-muted-foreground">AsteroidUI</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">A shared visual foundation</h1>
         </div>
-        <ThemeSelect />
       </header>
 
       <section aria-labelledby="intro-title" className="max-w-2xl">

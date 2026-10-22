@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { setupLinks } from "@/catalog/setup-content";
-import { isLocalRegistry, registryOrigin } from "@/catalog/registry-address";
+import { setupLinks } from "@/site/guides/setup-content";
+import { isLocalRegistry, registryOrigin } from "@/site/catalog/registry-address";
 
 export default function GettingStartedPage() {
   return (
